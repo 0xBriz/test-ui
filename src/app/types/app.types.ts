@@ -4,6 +4,12 @@ export interface IAppData {
   users: AaltoUser[];
   contracts: AppContractData;
   lockTimeOptions: LockTime[];
+  tokenInfo: {
+    circulating: string;
+    total: string;
+    max: string;
+    burned: string;
+  };
 }
 
 export interface ILockPool {

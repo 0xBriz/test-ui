@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import { awaitTransactionComplete } from 'src/utils/web3.utils';
 import { AALTO_ABI } from '../abis/aalto-abi';
 import { TEST_USERS } from '../data/data';
-import { AaltoUser } from '../types/app.types';
+import { AaltoUser, UserLockRecord } from '../types/app.types';
 import { StakingService } from './staking.service';
 import { DataStoreService } from './store.service';
 import { Web3Service } from './web3.service';
@@ -11,8 +11,6 @@ import { Web3Service } from './web3.service';
 @Injectable({ providedIn: 'root' })
 export class AaltoService {
   contract: ethers.Contract;
-
-  data: any = {};
 
   constructor(
     private readonly web3Service: Web3Service,
@@ -40,6 +38,7 @@ export class AaltoService {
 
   async init() {
     try {
+      await this.setTokenInfo();
       await this.setContractData();
       await this.stakedAalto.setLockTimes();
       await this.setUsersData();
@@ -56,6 +55,30 @@ export class AaltoService {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async increaseStake(lock: UserLockRecord, amount: ethers.BigNumber) {
+    try {
+      const tx = await this.contract.increaseStakeInCurrentPool(lock.poolId);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async setTokenInfo() {
+    const [circulating, total, max, dead] = await Promise.all([
+      this.contract.getCirculatingSupply(),
+      this.contract.totalSupply(),
+      this.contract.maxSupply(),
+      this.contract.balanceOf('0x000000000000000000000000000000000000dEaD'),
+    ]);
+
+    this.store.setTokenInfo({
+      circulating: ethers.utils.commify(ethers.utils.formatEther(circulating)),
+      total: ethers.utils.commify(ethers.utils.formatEther(total)),
+      max: ethers.utils.commify(ethers.utils.formatEther(max)),
+      burned: ethers.utils.commify(ethers.utils.formatEther(dead)),
+    });
   }
 
   async setContractData() {

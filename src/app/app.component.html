@@ -3,13 +3,16 @@
     <div class="col-md-6">
       <h1>Aalto - Super Moisty</h1>
     </div>
-    <div class="col-md-6">
-
-    </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-12 staking-form">
+  <div class="row" >
+    <div class="col-md-12 clearfix">
+      <button
+        class="float-right"
+        mat-raised-button
+        (click)="staking = !staking">{{  staking ? 'Close' : 'Stake'  }}</button>
+    </div>
+    <div class="col-md-12 staking-form" *ngIf="staking">
       <app-staking-form></app-staking-form>
     </div>
   </div>
@@ -30,6 +33,24 @@
               <tr>
                 <td>{{ data.contracts.nativeLiquidityPairAddress }}</td>
                 <td>{{ data.contracts.stableLiquidityPairAddress }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Circulating Supply</th>
+                <th>Total Supply</th>
+                <th>Max Supply</th>
+                <th>Total Burned</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{ data.tokenInfo.circulating }}</td>
+                <td>{{ data.tokenInfo.total }}</td>
+                <td>{{ data.tokenInfo.max }}</td>
+                <td>{{ data.tokenInfo.burned }}</td>
               </tr>
             </tbody>
           </table>
@@ -65,7 +86,7 @@
             </h6>
           </div>
 
-          <div class="col-md-12 outlined" *ngFor="let lock of user.locks">
+          <div class="col-md-12 outlined stake" *ngFor="let lock of user.locks">
             <table class="table table-bordered">
               <thead>
                 <tr>
@@ -82,6 +103,14 @@
                 </tr>
               </tbody>
             </table>
+
+            <div class="btn-bottom clearfix">
+
+              <button
+                mat-raised-button
+                color="warning"
+                class="float-right">Increase Stake</button>
+            </div>
           </div>
         </div>
       </div>

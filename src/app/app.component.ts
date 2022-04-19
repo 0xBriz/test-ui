@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { TEST_USERS } from './data/data';
 import { AaltoService } from './services/aalto.service';
 import { StakingService } from './services/staking.service';
 import { DataStoreService } from './services/store.service';
 import { Web3Service } from './services/web3.service';
+import { UserLockRecord } from './types/app.types';
 
 @Component({
   selector: 'app-root',
@@ -11,12 +11,6 @@ import { Web3Service } from './services/web3.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  data: any = {
-    nativeLiquidityPairAddress: '',
-  };
-
-  users = TEST_USERS;
-
   staking = false;
 
   constructor(
@@ -31,4 +25,6 @@ export class AppComponent {
       }
     });
   }
+
+  async doIncreaseStake(lock: UserLockRecord) {}
 }

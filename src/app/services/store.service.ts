@@ -16,6 +16,12 @@ export class DataStoreService {
       stableLiquidityPairAddress: '',
     },
     lockTimeOptions: [],
+    tokenInfo: {
+      circulating: '',
+      total: '',
+      max: '',
+      burned: '',
+    },
   };
 
   private _data = new BehaviorSubject<IAppData>(null);
@@ -38,6 +44,11 @@ export class DataStoreService {
 
   setLockTimeOptions(lockTimes: LockTime[]) {
     this._appData.lockTimeOptions = lockTimes;
+    this._data.next(this._appData);
+  }
+
+  setTokenInfo(tokenInfo) {
+    this._appData.tokenInfo = tokenInfo;
     this._data.next(this._appData);
   }
 
