@@ -52,4 +52,5 @@ export interface AppContractData {
 export interface LockTime {
   value: ethers.BigNumber;
   label: string;
+  poolId: number;
 }

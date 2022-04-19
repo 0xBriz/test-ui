@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AaltoUser, AppContractData, IAppData } from '../types/app.types';
+import {
+  AaltoUser,
+  AppContractData,
+  IAppData,
+  LockTime,
+} from '../types/app.types';
 
 @Injectable({ providedIn: 'root' })
 export class DataStoreService {
@@ -31,8 +36,16 @@ export class DataStoreService {
     this._data.next(this._appData);
   }
 
-  setLockTimeOptions(contracts: AppContractData) {
-    this._appData.contracts = contracts;
+  setLockTimeOptions(lockTimes: LockTime[]) {
+    this._appData.lockTimeOptions = lockTimes;
     this._data.next(this._appData);
+  }
+
+  getUsers() {
+    return this._appData.users;
+  }
+
+  getLockTimeOptions() {
+    return this._appData.lockTimeOptions;
   }
 }

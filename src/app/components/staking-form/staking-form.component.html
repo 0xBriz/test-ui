@@ -5,27 +5,31 @@
     <h5>Stake</h5>
   </div>
   <div class="col-md-12">
-    <form >
+    <form [formGroup]="stakingGroup">
       <div class="row"  *ngIf="(store.data | async) as data">
         <div class="col-md-12">
           <div class="row">
             <div class="col-md-3">
               <mat-form-field appearance="outline">
                 <mat-label>Stake Time</mat-label>
-                <mat-select>
-                  <mat-option *ngFor="let lock of data.lockTimeOptions" [value]="lock.value">{{ lock.label }}</mat-option>
+                <mat-select formControlName="poolId">
+                  <mat-option *ngFor="let lock of data.lockTimeOptions" [value]="lock.poolId">{{ lock.label }}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
             <div class="col-md-3">
               <mat-form-field appearance="outline">
                 <mat-label>Amount</mat-label>
-                <input type="number" matInput>
+                <input type="number" matInput formControlName="amount">
               </mat-form-field>
             </div>
 
             <div class="col-md-2" style="padding-top: 20px;">
-              <button mat-raised-button color="primary">Submit</button>
+              <button
+                mat-raised-button
+                color="primary"
+                [disabled]="!stakingGroup.valid"
+                (click)="doStaking()">Submit</button>
             </div>
           </div>
         </div>

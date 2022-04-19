@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { StakingService } from 'src/app/services/staking.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ethers } from 'ethers';
+import { AaltoService } from 'src/app/services/aalto.service';
 import { DataStoreService } from 'src/app/services/store.service';
 
 @Component({
@@ -8,10 +10,28 @@ import { DataStoreService } from 'src/app/services/store.service';
   styleUrls: ['./staking-form.component.scss'],
 })
 export class StakingFormComponent implements OnInit {
+  stakingGroup: FormGroup;
+
   constructor(
-    public readonly stakedAalto: StakingService,
-    public readonly store: DataStoreService
+    public readonly store: DataStoreService,
+    public readonly aalto: AaltoService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit() {
+    this.stakingGroup = new FormGroup({
+      poolId: new FormControl(null, [Validators.required]),
+      amount: new FormControl(null, [Validators.required]),
+    });
+  }
+
+  async doStaking() {
+    console.log(this.stakingGroup.value);
+    const poolId = this.stakingGroup.value.poolId;
+    const amount = ethers.utils.parseEther(
+      String(this.stakingGroup.value.amount)
+    );
+    console.log(amount);
+    this.stakingGroup.reset();
+    await this.aalto.stake(poolId, amount);
+  }
 }

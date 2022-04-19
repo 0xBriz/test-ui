@@ -1,15 +1,24 @@
 import { Injectable } from '@angular/core';
 import { ethers } from 'ethers';
+import { BehaviorSubject } from 'rxjs';
 import { STAKED_AALTO_ABI } from '../abis/staked-aalto-abi';
-import { ILockPool, IStakingInput, UserLockRecord } from '../types/app.types';
+import { LockTime, UserLockRecord } from '../types/app.types';
+import { DataStoreService } from './store.service';
 import { Web3Service } from './web3.service';
 
 @Injectable({ providedIn: 'root' })
 export class StakingService {
   contract: ethers.Contract;
-  lockPools: ILockPool[];
 
-  constructor(private readonly web3Service: Web3Service) {
+  private _stake = new BehaviorSubject<boolean>(false);
+  get stakeEvent() {
+    return this._stake.asObservable();
+  }
+
+  constructor(
+    private readonly web3Service: Web3Service,
+    private readonly store: DataStoreService
+  ) {
     this.web3Service.web3.subscribe((info) => {
       if (info) {
         this.contract = new ethers.Contract(
@@ -17,18 +26,16 @@ export class StakingService {
           STAKED_AALTO_ABI,
           info.signer
         );
-
-        this.setData();
       }
     });
   }
 
-  async setData() {
+  async setLockTimes() {
     const [lockOptions] = await Promise.all([
       this.contract.getLockTimeOptions(),
     ]);
 
-    const options = [];
+    const options: LockTime[] = [];
     lockOptions.forEach((lockTime, idx) => {
       const lockDays = lockTime.toNumber() / 60 / 60 / 24;
       options.push({
@@ -38,44 +45,37 @@ export class StakingService {
       });
     });
 
-    this.lockPools = options;
+    this.store.setLockTimeOptions(options);
   }
 
   async getUserStakes(
     user: string,
     gonsPer: ethers.BigNumber
   ): Promise<UserLockRecord[]> {
-    const pools = [
-      {
-        poolId: 6,
-      },
-    ];
+    const pools = this.store.getLockTimeOptions();
 
     const userLocks: UserLockRecord[] = [];
     for (const pool of pools) {
-      const userRecord: UserLockRecord = await this.contract.userPools(
-        user,
-        pool.poolId
-      );
+      const userRecord = await this.contract.userPools(user, pool.poolId);
+
+      if (userRecord.endTime == 0) {
+        continue;
+      }
 
       const record: UserLockRecord = {
         ...userRecord,
       };
 
-      console.log(record);
-      const lockedBalance = await this.contract.balanceOf(user);
       record.amountLocked = ethers.utils.commify(
-        ethers.utils.formatEther(lockedBalance.div(gonsPer))
+        ethers.utils.formatEther(userRecord.amountLocked.div(gonsPer))
       );
 
       record.endTime =
         (userRecord.endTime - userRecord.startTime) / 60 / 60 / 24;
 
-      if (userRecord.endTime != 0) {
-        record.startTimeDate = new Date(
-          userRecord.startTime * 1000
-        ).toUTCString();
-      }
+      record.startTimeDate = new Date(
+        userRecord.startTime * 1000
+      ).toUTCString();
 
       userLocks.push(record);
     }
@@ -83,7 +83,10 @@ export class StakingService {
     return userLocks;
   }
 
-  async stake(input: IStakingInput) {
-    //
+  setListeners() {
+    this.contract.on('Stake', () => {
+      console.log('Stake Event');
+      this._stake.next(true);
+    });
   }
 }

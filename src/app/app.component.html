@@ -48,12 +48,12 @@
             </h4>
           </div>
 
-          <div class="col-md-6" *ngFor="let lock of user.locks">
+          <div class="col-md-6">
             <p>
               Wallet Balance:  {{ user.walletBalance.UI }}
              </p>
           </div>
-          <div class="col-md-6" *ngFor="let lock of user.locks">
+          <div class="col-md-6">
             <p>
               Locked Balance:  {{ user.lockedBalance }}
              </p>
@@ -71,7 +71,7 @@
                 <tr>
                   <th>Staked</th>
                   <th>Started</th>
-                  <th>End In</th>
+                  <th>Ends In</th>
                 </tr>
               </thead>
               <tbody>
