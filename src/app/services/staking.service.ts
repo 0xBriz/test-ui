@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ethers } from 'ethers';
 import { STAKED_AALTO_ABI } from '../abis/staked-aalto-abi';
-import { ILockPool } from '../types/staking.types';
+import { ILockPool, IStakingInput, UserLockRecord } from '../types/app.types';
 import { Web3Service } from './web3.service';
 
 @Injectable({ providedIn: 'root' })
@@ -41,9 +41,49 @@ export class StakingService {
     this.lockPools = options;
   }
 
-  async getUserStakes(user: string) {
-    for (const pool of this.lockPools) {
-      //
+  async getUserStakes(
+    user: string,
+    gonsPer: ethers.BigNumber
+  ): Promise<UserLockRecord[]> {
+    const pools = [
+      {
+        poolId: 6,
+      },
+    ];
+
+    const userLocks: UserLockRecord[] = [];
+    for (const pool of pools) {
+      const userRecord: UserLockRecord = await this.contract.userPools(
+        user,
+        pool.poolId
+      );
+
+      const record: UserLockRecord = {
+        ...userRecord,
+      };
+
+      console.log(record);
+      const lockedBalance = await this.contract.balanceOf(user);
+      record.amountLocked = ethers.utils.commify(
+        ethers.utils.formatEther(lockedBalance.div(gonsPer))
+      );
+
+      record.endTime =
+        (userRecord.endTime - userRecord.startTime) / 60 / 60 / 24;
+
+      if (userRecord.endTime != 0) {
+        record.startTimeDate = new Date(
+          userRecord.startTime * 1000
+        ).toUTCString();
+      }
+
+      userLocks.push(record);
     }
+
+    return userLocks;
+  }
+
+  async stake(input: IStakingInput) {
+    //
   }
 }

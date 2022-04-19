@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { TEST_USERS } from './data/data';
 import { AaltoService } from './services/aalto.service';
 import { StakingService } from './services/staking.service';
+import { DataStoreService } from './services/store.service';
 import { Web3Service } from './services/web3.service';
 
 @Component({
@@ -21,13 +22,12 @@ export class AppComponent {
   constructor(
     public readonly web3Service: Web3Service,
     public readonly aalto: AaltoService,
-    public readonly stakedAalto: StakingService
+    public readonly stakedAalto: StakingService,
+    public readonly store: DataStoreService
   ) {
     this.web3Service.web3.subscribe(async (info) => {
       if (info) {
-        console.log(info);
-        const shit = await this.aalto.getUsersData();
-        //console.log(await this.aalto.contract.owner());
+        await this.aalto.init();
       }
     });
   }

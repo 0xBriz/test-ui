@@ -1,7 +1,7 @@
-<div class="container">
+<div class="container" >
   <div class="row" style="margin-top: 35px;">
     <div class="col-md-6">
-      <h1>Aalto</h1>
+      <h1>Aalto - Super Moisty</h1>
     </div>
     <div class="col-md-6">
 
@@ -9,15 +9,13 @@
   </div>
 
   <div class="row">
-    <div class="col-md-12">
-      <h5>Stake</h5>
-    </div>
-    <div class="col-md-12">
+    <div class="col-md-12 staking-form">
       <app-staking-form></app-staking-form>
     </div>
   </div>
 
-  <div class="row" style="margin-top: 35px;">
+
+  <div class="row" style="margin-top: 35px;" *ngIf="(store.data | async) as data">
     <div class="col-md-12">
       <div class="row" >
         <div class="col-md-12">
@@ -30,35 +28,64 @@
             </thead>
             <tbody>
               <tr>
-                <td>{{ aalto.data?.nativeLiquidityPairAddress }}</td>
-                <td>{{ aalto.data?.stableLiquidityPairAddress }}</td>
+                <td>{{ data.contracts.nativeLiquidityPairAddress }}</td>
+                <td>{{ data.contracts.stableLiquidityPairAddress }}</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-      <div class="row" *ngFor="let user of users" style="margin-top: 25px;">
-        <div class="col-md-12">
-          <!-- <h4>{{ user.name }}</h4> -->
-          <p class="bold">
-            {{ user.name }} - Wallet Balance: {{ user.balance }}
-          </p>
-        </div>
 
-        <div class="col-md-12">
-          <h6>
-            Locked Balances:
-          </h6>
-        </div>
+      <div class="col-md-12" *ngIf="!data.users.length">
+        <h4>Loading...</h4>
+      </div>
 
-        <div class="col-md-6" *ngFor="let lock of user.lockedBalances">
-          <p>
-            Locked Balance:
-          </p>
+      <div class="col-md-12 user-info" *ngFor="let user of data.users">
+        <div class="row">
+          <div class="col-md-12">
+            <h4 class="bold">
+              {{ user.name }}
+            </h4>
+          </div>
+
+          <div class="col-md-6" *ngFor="let lock of user.locks">
+            <p>
+              Wallet Balance:  {{ user.walletBalance.UI }}
+             </p>
+          </div>
+          <div class="col-md-6" *ngFor="let lock of user.locks">
+            <p>
+              Locked Balance:  {{ user.lockedBalance }}
+             </p>
+          </div>
+
+          <div class="col-md-12">
+            <h6>
+              Staking
+            </h6>
+          </div>
+
+          <div class="col-md-12 outlined" *ngFor="let lock of user.locks">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Staked</th>
+                  <th>Started</th>
+                  <th>End In</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ lock.amountLocked }}</td>
+                  <td> {{ lock.startTimeDate }}</td>
+                  <td> {{ lock.endTime }} days</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
