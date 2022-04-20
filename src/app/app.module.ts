@@ -12,9 +12,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { StakingFormComponent } from './components/staking-form/staking-form.component';
 import { StakingDialogComponent } from './components/staking-dialog/staking-dialog.component';
+import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 
 @NgModule({
-  declarations: [AppComponent, StakingFormComponent, StakingDialogComponent],
+  declarations: [
+    AppComponent,
+    StakingFormComponent,
+    StakingDialogComponent,
+    ErrorDialogComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ethers } from 'ethers';
 import { awaitTransactionComplete } from 'src/utils/web3.utils';
 import { AALTO_ABI } from '../abis/aalto-abi';
+import { ErrorDialogComponent } from '../components/error-dialog/error-dialog.component';
 import { TEST_USERS } from '../data/data';
 import { AaltoUser, UserLockRecord } from '../types/app.types';
 import { StakingService } from './staking.service';
@@ -15,12 +17,13 @@ export class AaltoService {
   constructor(
     private readonly web3Service: Web3Service,
     private readonly stakedAalto: StakingService,
-    private readonly store: DataStoreService
+    private readonly store: DataStoreService,
+    private dialog: MatDialog
   ) {
     this.web3Service.web3.subscribe((info) => {
       if (info) {
         this.contract = new ethers.Contract(
-          ethers.utils.getAddress('0xFF8172425b41c9074923a35Beacab336165E635e'),
+          ethers.utils.getAddress('0x3c0C30D7D08057895aC36624B83CbD5808e4f8AA'),
           AALTO_ABI,
           info.signer
         );
@@ -56,10 +59,15 @@ export class AaltoService {
   async stake(poolId: number, amount: ethers.BigNumber) {
     try {
       const tx = await this.contract.stake(poolId, amount);
-      console.log(tx);
       await awaitTransactionComplete(tx);
+      await this.setUsersData();
     } catch (error) {
-      console.log(error);
+      console.log(error.data.message);
+      this.dialog.open(ErrorDialogComponent, {
+        data: {
+          error: error.data.message,
+        },
+      });
     }
   }
 
