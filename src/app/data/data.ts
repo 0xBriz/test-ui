@@ -8,22 +8,22 @@ export const TEST_USERS: any[] = [
     balance: 0,
     lockedBalances: [],
   },
-  {
-    name: 'Ames',
-    address: amesAddy,
-    balance: 0,
-    lockedBalances: [],
-  },
-  {
-    name: 'Fox',
-    address: foxAddy,
-    balance: 0,
-    lockedBalances: [],
-  },
-  {
-    name: 'Moist',
-    address: niceAddy,
-    balance: 0,
-    lockedBalances: [],
-  },
+  // {
+  //   name: 'Ames',
+  //   address: amesAddy,
+  //   balance: 0,
+  //   lockedBalances: [],
+  // },
+  // {
+  //   name: 'Fox',
+  //   address: foxAddy,
+  //   balance: 0,
+  //   lockedBalances: [],
+  // },
+  // {
+  //   name: 'Moist',
+  //   address: niceAddy,
+  //   balance: 0,
+  //   lockedBalances: [],
+  // },
 ];

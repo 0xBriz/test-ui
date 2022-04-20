@@ -34,6 +34,12 @@ export class AaltoService {
         this.setUsersData();
       }
     });
+
+    this.stakedAalto.increaseStakeEvent.subscribe((staked) => {
+      if (staked) {
+        this.setUsersData();
+      }
+    });
   }
 
   async init() {
@@ -57,9 +63,14 @@ export class AaltoService {
     }
   }
 
-  async increaseStake(lock: UserLockRecord, amount: ethers.BigNumber) {
+  async increaseStake(lock: UserLockRecord, amount: number) {
     try {
-      const tx = await this.contract.increaseStakeInCurrentPool(lock.poolId);
+      const amountBN = ethers.utils.parseEther(String(amount));
+      const tx = await this.contract.increaseStakeInCurrentPool(
+        lock.poolId,
+        amountBN
+      );
+      await awaitTransactionComplete(tx);
     } catch (error) {
       console.log(error);
     }

@@ -104,12 +104,14 @@
               </tbody>
             </table>
 
-            <div class="btn-bottom clearfix">
-
+            <div class="col-md-12 clearfix">
               <button
                 mat-raised-button
-                color="warning"
-                class="float-right">Increase Stake</button>
+                color="primary"
+                class="float-right"
+                (click)="doIncreaseStake(user, lock)">
+                Increase Stake
+              </button>
             </div>
           </div>
         </div>

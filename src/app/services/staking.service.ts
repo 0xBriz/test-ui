@@ -15,6 +15,11 @@ export class StakingService {
     return this._stake.asObservable();
   }
 
+  private _increaseStake = new BehaviorSubject<boolean>(false);
+  get increaseStakeEvent() {
+    return this._increaseStake.asObservable();
+  }
+
   constructor(
     private readonly web3Service: Web3Service,
     private readonly store: DataStoreService
@@ -66,6 +71,7 @@ export class StakingService {
         ...userRecord,
       };
 
+      record.poolId = userRecord.poolId.toNumber();
       record.amountLocked = ethers.utils.commify(
         ethers.utils.formatEther(userRecord.amountLocked.div(gonsPer))
       );
@@ -87,6 +93,11 @@ export class StakingService {
     this.contract.on('Stake', () => {
       console.log('Stake Event');
       this._stake.next(true);
+    });
+
+    this.contract.on('IncreaseStake', () => {
+      console.log('IncreaseStake Event');
+      this._increaseStake.next(true);
     });
   }
 }
