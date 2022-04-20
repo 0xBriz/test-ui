@@ -3,128 +3,18 @@
     <div class="col-md-6">
       <h1>Aalto - Super Moisty</h1>
     </div>
-  </div>
-
-  <div class="row" >
-    <div class="col-md-12 clearfix">
-      <button
-        class="float-right"
-        mat-raised-button
-        (click)="staking = !staking">{{  staking ? 'Close' : 'Stake'  }}</button>
-    </div>
-    <div class="col-md-12 staking-form" *ngIf="staking">
-      <app-staking-form></app-staking-form>
+    <div class="col-md-6">
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/presale" routerLinkActive="active">Presale</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/staking" routerLinkActive="active">Staking</a>
+        </li>
+      </ul>
     </div>
   </div>
 
-
-  <div class="row" style="margin-top: 35px;" *ngIf="(store.data | async) as data">
-    <div class="col-md-12">
-      <div class="row" >
-        <div class="col-md-12">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>Native LP</th>
-                <th>Stable LP</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{ data.contracts.nativeLiquidityPairAddress }}</td>
-                <td>{{ data.contracts.stableLiquidityPairAddress }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>Circulating Supply</th>
-                <th>Total Supply</th>
-                <th>Max Supply</th>
-                <th>Total Burned</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{ data.tokenInfo.circulating }}</td>
-                <td>{{ data.tokenInfo.total }}</td>
-                <td>{{ data.tokenInfo.max }}</td>
-                <td>{{ data.tokenInfo.burned }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="col-md-12" *ngIf="!data.users.length">
-        <h4>Loading...</h4>
-      </div>
-
-      <div class="col-md-12 user-info" *ngFor="let user of data.users">
-        <div class="row">
-          <div class="col-md-12">
-            <h4 class="bold">
-              {{ user.name }}
-            </h4>
-          </div>
-
-          <div class="col-md-6">
-            <p>
-              Wallet Balance:  {{ user.walletBalance.UI }}
-             </p>
-          </div>
-          <div class="col-md-6">
-            <p>
-              Locked Balance:  {{ user.lockedBalance }}
-             </p>
-          </div>
-
-          <div class="col-md-12">
-            <h6>
-              Staking
-            </h6>
-          </div>
-
-          <div class="col-md-12 outlined stake" *ngFor="let lock of user.locks">
-            <table class="table table-bordered">
-              <thead>
-                <tr>
-                  <th>Staked</th>
-                  <th>Started</th>
-                  <th>Ends In</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{{ lock.amountLocked }}</td>
-                  <td> {{ lock.startTimeDate }}</td>
-                  <td> {{ lock.endTime }} days</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div class="col-md-12 clearfix">
-              <button
-                mat-raised-button
-                color="primary"
-                class="float-right"
-                (click)="doIncreaseStake(user, lock)">
-                Increase Stake
-              </button>
-
-              <button
-                mat-raised-button
-                color="primary"
-                class="float-right"
-                (click)="doWithdraw(user, lock)">
-                Withdraw
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <router-outlet></router-outlet>
 </div>
 
