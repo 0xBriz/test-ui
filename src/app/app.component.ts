@@ -47,4 +47,8 @@ export class AppComponent {
       }
     });
   }
+
+  async doWithdraw(user: AaltoUser, lock: UserLockRecord) {
+    await this.aalto.withdraw(lock.poolId);
+  }
 }

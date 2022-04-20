@@ -63,11 +63,7 @@ export class AaltoService {
       await this.setUsersData();
     } catch (error) {
       console.log(error.data.message);
-      this.dialog.open(ErrorDialogComponent, {
-        data: {
-          error: error.data.message,
-        },
-      });
+      this.error(error.data.message);
     }
   }
 
@@ -80,7 +76,17 @@ export class AaltoService {
       );
       await awaitTransactionComplete(tx);
     } catch (error) {
+      this.error(error.data.message);
+    }
+  }
+
+  async withdraw(poolId: number) {
+    try {
+      const tx = await this.contract.withdrawStaking(poolId);
+      await awaitTransactionComplete(tx);
+    } catch (error) {
       console.log(error);
+      // this.error(error.data.message);
     }
   }
 
@@ -147,6 +153,14 @@ export class AaltoService {
     this.contract.on('Transfer', () => {
       console.log('Transfer Event');
       this.init();
+    });
+  }
+
+  private error(error) {
+    this.dialog.open(ErrorDialogComponent, {
+      data: {
+        error,
+      },
     });
   }
 }
