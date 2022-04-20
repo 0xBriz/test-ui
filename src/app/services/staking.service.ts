@@ -27,7 +27,7 @@ export class StakingService {
     this.web3Service.web3.subscribe((info) => {
       if (info) {
         this.contract = new ethers.Contract(
-          ethers.utils.getAddress('0xEf1f91Af946A5ebb4A333aE09b338618028ED4A7'),
+          ethers.utils.getAddress('0xC7920EBed0dD27FE71B5591993C4cCC47a753f82'),
           STAKED_AALTO_ABI,
           info.signer
         );

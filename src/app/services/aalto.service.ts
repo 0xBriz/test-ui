@@ -20,7 +20,7 @@ export class AaltoService {
     this.web3Service.web3.subscribe((info) => {
       if (info) {
         this.contract = new ethers.Contract(
-          ethers.utils.getAddress('0xF633bEfd5a37847292D1C0Ea796BEe7edE9a4C8D'),
+          ethers.utils.getAddress('0xFF8172425b41c9074923a35Beacab336165E635e'),
           AALTO_ABI,
           info.signer
         );
