@@ -1,7 +1,14 @@
 
 <div class="presale row">
-  <div class="col-md-12">
-    <p>presale works!</p>
+  <div class="col-md-6" *ngFor="let pool of pools">
+    <div class="card">
+      <!-- <img src="..." class="card-img-top" alt="..."> -->
+      <div class="card-body clearfix">
+        <h5 class="card-title" style="color: black;">{{ pool.name }}</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <button mat-raised-button color="primary" class="float-right">Deposit</button>
+      </div>
+    </div>
   </div>
 </div>
 
