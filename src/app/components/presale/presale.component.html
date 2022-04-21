@@ -1,12 +1,58 @@
 
 <div class="presale row">
-  <div class="col-md-6" *ngFor="let pool of pools">
+  <div class="col-md-12" *ngFor="let pool of presale.pools | async">
     <div class="card">
-      <!-- <img src="..." class="card-img-top" alt="..."> -->
-      <div class="card-body clearfix">
-        <h5 class="card-title" style="color: black;">{{ pool.name }}</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <button mat-raised-button color="primary" class="float-right">Deposit</button>
+      <div class="card-body clearfix" style="color: black;">
+        <h5 class="card-title">{{ pool.name }}</h5>
+       <div class="row" style="margin: 15px;">
+          <div class="col-md-12">
+            <p>*amount of tokens raised for the pool (in LP tokens)</p>
+            Raising Amount: {{ pool.raisingAmountPool }}
+          </div>
+          <div class="col-md-12">
+            <p>*amount of tokens offered for the pool (in offeringTokens)</p>
+            Offering Amount: {{ pool.offeringAmountPool }}
+          </div>
+          <div class="col-md-12">
+            <p>*limit of tokens per user (if 0, it is ignored)</p>
+            Deposit Limit: {{ pool.limitPerUserInLP }}
+          </div>
+          <div class="col-md-12">
+            <p>*total amount pool deposited (in LP tokens)</p>
+            Total Deposits: {{ pool.totalAmountPool }}
+          </div>
+
+          <div class="col-md-12">
+            <p>*max commit base on protocol token holding</p>
+            Max Commit Ratio:  {{ pool.maxCommitRatio }}
+          </div>
+          <div class="col-md-12">
+            <p>*can deposit overflow</p>
+            Can Overflow:  {{ pool.hasOverflow }}
+          </div>
+          <div class="col-md-12">
+            <p>*total taxes collected (starts at 0, increases with each harvest if overflow)</p>
+            Tax Overflow Sum:  {{ pool.sumTaxesOverflow }}
+          </div>
+          <div class="col-md-12">
+            <p>*only for whitelist</p>
+            Has Whitelist: {{ pool.hasWhitelist }}
+          </div>
+          <div class="col-md-12">
+            <p>*tax on the overflow (if any, it works with _calculateTaxOverflow)</p>
+            Has Tax: {{ pool.hasTax }}
+          </div>
+          <div class="col-md-12">
+            <p></p>
+            Deposits Paused: {{ pool.isStopDeposit }}
+          </div>
+       </div>
+        <button
+          mat-raised-button
+          color="primary"
+          class="float-right"
+          (click)="setDeposit()">
+        Deposit</button>
       </div>
     </div>
   </div>

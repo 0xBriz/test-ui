@@ -1,0 +1,71 @@
+
+<form [formGroup]="createGroup">
+  <div class="row">
+    <div class="col-md-4">
+      <p>
+        * amount of tokens raised for the pool (in LP tokens)
+      </p>
+      <mat-form-field appearance="outline">
+        <mat-label>Raising Amount</mat-label>
+        <input type="number" matInput formControlName="raisingAmountPool">
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-4">
+      <p>
+        * amount of tokens offered for the pool (in offeringTokens)
+      </p>
+      <mat-form-field appearance="outline">
+        <mat-label>Offering Amount</mat-label>
+        <input type="number" matInput formControlName="offeringAmountPool">
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-4">
+      <p>
+        * limit of tokens per user (if 0, it is ignored)
+      </p>
+      <mat-form-field appearance="outline">
+        <mat-label>User limit</mat-label>
+        <input type="number" matInput formControlName="limitPerUserInLP">
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-4">
+      <p>
+        * max commit base on protocol token holding
+      </p>
+      <mat-form-field appearance="outline">
+        <mat-label>User limit</mat-label>
+        <input type="number" matInput formControlName="maxCommitRatio">
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-4">
+      <p>
+        * max commit base on protocol token holding
+      </p>
+      <mat-form-field appearance="outline">
+        <mat-label>User limit</mat-label>
+        <input type="number" matInput formControlName="maxCommitRatio">
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+  </div>
+</form>
+

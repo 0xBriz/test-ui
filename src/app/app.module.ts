@@ -16,6 +16,7 @@ import { ErrorDialogComponent } from './components/error-dialog/error-dialog.com
 import { PresaleComponent } from './components/presale/presale.component';
 import { StakingComponent } from './components/staking/staking.component';
 import { RouterModule } from '@angular/router';
+import { CreatePoolComponent } from './components/create-pool/create-pool.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { RouterModule } from '@angular/router';
     ErrorDialogComponent,
     PresaleComponent,
     StakingComponent,
+    CreatePoolComponent,
   ],
   imports: [
     BrowserModule,
