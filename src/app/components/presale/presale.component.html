@@ -3,7 +3,7 @@
   <div class="col-md-12" *ngFor="let pool of presale.pools | async">
     <div class="card">
       <div class="card-body clearfix" style="color: black;">
-        <h5 class="card-title">{{ pool.name }}</h5>
+        <h5 class="card-title">{{ pool.name }} {{ pool.hasWhitelist ? '(Whitelist)' : '' }}</h5>
        <div class="row" style="margin: 15px;">
           <div class="col-md-12">
             <p>*amount of tokens raised for the pool (in LP tokens)</p>

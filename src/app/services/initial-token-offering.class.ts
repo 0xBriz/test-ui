@@ -4,8 +4,15 @@ import { TOKEN_OFFERING_ABI } from '../abis/token-offering';
 
 const formatUI = ethers.utils.formatEther;
 const commasUI = (value) => {
-  ethers.utils.commify(formatUI(value));
+  return ethers.utils.commify(formatUI(value));
 };
+
+const limitPerUserInLP = ethers.utils.parseEther('750');
+const minProtocolToJoin = ethers.utils.parseEther('0');
+const maxCommitRatio = ethers.utils.parseEther('0');
+const hasTax = false;
+const isStopDeposit = false;
+const hasOverflow = true;
 
 export class InitialTokenOffering {
   public readonly contract: ethers.Contract;
@@ -13,18 +20,27 @@ export class InitialTokenOffering {
   pools = [
     {
       name: 'Moist UST',
-      address: '0xB92ADEAc403CA2252f9a3ED6EB59a7372FBC195e',
+      symbol: 'MUST',
+      tokenAddress: '0xB92ADEAc403CA2252f9a3ED6EB59a7372FBC195e',
       poolId: 0,
     },
     {
       name: 'Moist BUSD',
-      address: '0x3ce45a456B45a301f92dD71B6125095770B8f88E',
+      symbol: 'MBUSD',
+      tokenAddress: '0x3ce45a456B45a301f92dD71B6125095770B8f88E',
       poolId: 1,
     },
     {
-      name: 'Moist BNB',
-      address: '0x46b06ef72DB02535D1451Fc27F9c7E36edD669E2',
+      name: 'Moist UST',
+      symbol: 'MUST',
+      tokenAddress: '0xB92ADEAc403CA2252f9a3ED6EB59a7372FBC195e',
       poolId: 2,
+    },
+    {
+      name: 'Moist BUSD',
+      symbol: 'MBUSD',
+      tokenAddress: '0x3ce45a456B45a301f92dD71B6125095770B8f88E',
+      poolId: 3,
     },
   ];
 
@@ -46,16 +62,15 @@ export class InitialTokenOffering {
         ...pool,
         ...data,
       };
-      info.raisingAmountPool = formatUI(info.raisingAmountPool);
-      info.offeringAmountPool = formatUI(info.offeringAmountPool);
-      info.limitPerUserInLP = formatUI(info.limitPerUserInLP);
-      info.totalAmountPool = formatUI(info.totalAmountPool);
+
+      info.raisingAmountPool = commasUI(info.raisingAmountPool);
+      info.offeringAmountPool = commasUI(info.offeringAmountPool);
+      info.limitPerUserInLP = commasUI(info.limitPerUserInLP);
+      info.totalAmountPool = commasUI(info.totalAmountPool);
       info.maxCommitRatio = formatUI(info.maxCommitRatio);
-      info.sumTaxesOverflow = formatUI(info.sumTaxesOverflow);
+      info.sumTaxesOverflow = commasUI(info.sumTaxesOverflow);
 
       poolInfos.push(info);
-
-      console.log(info);
     }
 
     return poolInfos;

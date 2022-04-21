@@ -16,7 +16,7 @@ export class PresaleService {
     this.web3Service.web3.subscribe((info) => {
       if (info) {
         this.contract = new InitialTokenOffering(
-          '0xd48851cc7e4f378D876f48e12E48Eda010581530',
+          '0x4cAFf898C4827FC2AAF024b24F4cF8E4dFbaF426',
           info.signer
         );
 
