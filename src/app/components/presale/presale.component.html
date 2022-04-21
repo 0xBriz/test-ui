@@ -21,26 +21,9 @@
             <p>*total amount pool deposited (in LP tokens)</p>
             Total Deposits: {{ pool.totalAmountPool }}
           </div>
-
-          <div class="col-md-12">
-            <p>*max commit base on protocol token holding</p>
-            Max Commit Ratio:  {{ pool.maxCommitRatio }}
-          </div>
-          <div class="col-md-12">
-            <p>*can deposit overflow</p>
-            Can Overflow:  {{ pool.hasOverflow }}
-          </div>
-          <div class="col-md-12">
-            <p>*total taxes collected (starts at 0, increases with each harvest if overflow)</p>
-            Tax Overflow Sum:  {{ pool.sumTaxesOverflow }}
-          </div>
           <div class="col-md-12">
             <p>*only for whitelist</p>
             Has Whitelist: {{ pool.hasWhitelist }}
-          </div>
-          <div class="col-md-12">
-            <p>*tax on the overflow (if any, it works with _calculateTaxOverflow)</p>
-            Has Tax: {{ pool.hasTax }}
           </div>
           <div class="col-md-12">
             <p></p>
@@ -51,7 +34,7 @@
           mat-raised-button
           color="primary"
           class="float-right"
-          (click)="setDeposit()">
+          (click)="setDeposit(pool)">
         Deposit</button>
       </div>
     </div>

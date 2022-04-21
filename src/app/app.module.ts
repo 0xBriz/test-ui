@@ -17,6 +17,7 @@ import { PresaleComponent } from './components/presale/presale.component';
 import { StakingComponent } from './components/staking/staking.component';
 import { RouterModule } from '@angular/router';
 import { CreatePoolComponent } from './components/create-pool/create-pool.component';
+import { DepositDialogComponent } from './components/deposit-dialog/deposit-dialog.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { CreatePoolComponent } from './components/create-pool/create-pool.compon
     PresaleComponent,
     StakingComponent,
     CreatePoolComponent,
+    DepositDialogComponent,
   ],
   imports: [
     BrowserModule,

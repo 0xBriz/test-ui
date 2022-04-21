@@ -212,12 +212,6 @@ export const TOKEN_OFFERING_ABI = [
       {
         indexed: false,
         internalType: 'bool',
-        name: 'hasTax',
-        type: 'bool',
-      },
-      {
-        indexed: false,
-        internalType: 'bool',
         name: 'hasWhitelist',
         type: 'bool',
       },
@@ -230,69 +224,6 @@ export const TOKEN_OFFERING_ABI = [
     ],
     name: 'PoolParametersSet',
     type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'user',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'referrer',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'commissionAmount',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'token',
-        type: 'address',
-      },
-    ],
-    name: 'ReferralCommissionPaid',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'user',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'referrer',
-        type: 'address',
-      },
-    ],
-    name: 'ReferralRecorded',
-    type: 'event',
-  },
-  {
-    inputs: [],
-    name: 'MAXIMUM_REFERRAL_COMMISSION_RATE',
-    outputs: [
-      {
-        internalType: 'uint16',
-        name: '',
-        type: 'uint16',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
   },
   {
     inputs: [
@@ -336,11 +267,6 @@ export const TOKEN_OFFERING_ABI = [
         internalType: 'uint8',
         name: '_pid',
         type: 'uint8',
-      },
-      {
-        internalType: 'address',
-        name: '_referrer',
-        type: 'address',
       },
     ],
     name: 'depositPool',
@@ -404,25 +330,6 @@ export const TOKEN_OFFERING_ABI = [
     name: 'finalWithdraw',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_user',
-        type: 'address',
-      },
-    ],
-    name: 'getReferrer',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -561,57 +468,6 @@ export const TOKEN_OFFERING_ABI = [
   },
   {
     inputs: [],
-    name: 'referralCommissionRate',
-    outputs: [
-      {
-        internalType: 'uint16',
-        name: '',
-        type: 'uint16',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'referralsCount',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'referrers',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
     name: 'renounceOwnership',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -620,6 +476,24 @@ export const TOKEN_OFFERING_ABI = [
   {
     inputs: [],
     name: 'setEmergencyRefund',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_who',
+        type: 'address',
+      },
+      {
+        internalType: 'bool',
+        name: 'value',
+        type: 'bool',
+      },
+    ],
+    name: 'setManager',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -668,16 +542,6 @@ export const TOKEN_OFFERING_ABI = [
         type: 'uint256',
       },
       {
-        internalType: 'uint256',
-        name: '_maxCommitRatio',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: '_minProtocolToJoin',
-        type: 'uint256',
-      },
-      {
         internalType: 'uint8',
         name: '_pid',
         type: 'uint8',
@@ -689,22 +553,12 @@ export const TOKEN_OFFERING_ABI = [
       },
       {
         internalType: 'bool',
-        name: '_hasTax',
-        type: 'bool',
-      },
-      {
-        internalType: 'bool',
         name: '_hasWhitelist',
         type: 'bool',
       },
       {
         internalType: 'bool',
         name: '_isStopDeposit',
-        type: 'bool',
-      },
-      {
-        internalType: 'bool',
-        name: '_hasOverflow',
         type: 'bool',
       },
     ],
@@ -722,19 +576,6 @@ export const TOKEN_OFFERING_ABI = [
       },
     ],
     name: 'setProtocolToken',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint16',
-        name: '_referralCommissionRate',
-        type: 'uint16',
-      },
-    ],
-    name: 'setReferralCommissionRate',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -848,33 +689,13 @@ export const TOKEN_OFFERING_ABI = [
       },
       {
         internalType: 'uint256',
-        name: 'maxCommitRatio',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'minProtocolToJoin',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
         name: 'totalAmountPool',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'sumTaxesOverflow',
         type: 'uint256',
       },
       {
         internalType: 'address',
         name: 'lpToken',
         type: 'address',
-      },
-      {
-        internalType: 'bool',
-        name: 'hasTax',
-        type: 'bool',
       },
       {
         internalType: 'bool',
@@ -885,30 +706,6 @@ export const TOKEN_OFFERING_ABI = [
         internalType: 'bool',
         name: 'isStopDeposit',
         type: 'bool',
-      },
-      {
-        internalType: 'bool',
-        name: 'hasOverflow',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint8',
-        name: '_pid',
-        type: 'uint8',
-      },
-    ],
-    name: 'viewPoolTaxRateOverflow',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
       },
     ],
     stateMutability: 'view',

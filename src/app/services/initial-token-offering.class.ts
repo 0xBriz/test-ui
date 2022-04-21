@@ -3,16 +3,9 @@ import { awaitTransactionComplete } from 'src/utils/web3.utils';
 import { TOKEN_OFFERING_ABI } from '../abis/token-offering';
 
 const formatUI = ethers.utils.formatEther;
-const commasUI = (value) => {
+export const commasUI = (value) => {
   return ethers.utils.commify(formatUI(value));
 };
-
-const limitPerUserInLP = ethers.utils.parseEther('750');
-const minProtocolToJoin = ethers.utils.parseEther('0');
-const maxCommitRatio = ethers.utils.parseEther('0');
-const hasTax = false;
-const isStopDeposit = false;
-const hasOverflow = true;
 
 export class InitialTokenOffering {
   public readonly contract: ethers.Contract;
@@ -44,13 +37,42 @@ export class InitialTokenOffering {
     },
   ];
 
-  constructor(address: string, signer: ethers.Signer) {
-    this.contract = new ethers.Contract(address, TOKEN_OFFERING_ABI, signer);
+  constructor(private address: string, private signer: ethers.Signer) {
+    this.contract = new ethers.Contract(
+      this.address,
+      TOKEN_OFFERING_ABI,
+      signer
+    );
   }
 
-  async depositPool(amount: ethers.BigNumber, poolId: number) {
-    const tx = await this.contract.depositPool(amount, poolId);
-    await awaitTransactionComplete(tx);
+  async depositPool(pool, amount: number, user: string) {
+    try {
+      const amountBN = ethers.utils.parseEther(String(amount));
+      await this.approveIfNeeded(pool, amountBN, user);
+      const tx = await this.contract.depositPool(amountBN, pool.poolId);
+      await awaitTransactionComplete(tx);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  private async approveIfNeeded(pool, amount, user: string) {
+    const abi = [
+      'function approve(address, uint256) public returns (bool)',
+      'function allowance(address, address) public view returns (uint256)',
+    ];
+
+    const poolToken = this.pools.find(
+      (p) => p.tokenAddress == pool.tokenAddress
+    );
+
+    const token = new ethers.Contract(poolToken.tokenAddress, abi, this.signer);
+
+    const allowOne = await token.allowance(user, this.address);
+    if (allowOne.lt(amount)) {
+      const tx = await token.approve(this.address, ethers.constants.MaxUint256);
+      await awaitTransactionComplete(tx);
+    }
   }
 
   async getPools() {
@@ -67,8 +89,6 @@ export class InitialTokenOffering {
       info.offeringAmountPool = commasUI(info.offeringAmountPool);
       info.limitPerUserInLP = commasUI(info.limitPerUserInLP);
       info.totalAmountPool = commasUI(info.totalAmountPool);
-      info.maxCommitRatio = formatUI(info.maxCommitRatio);
-      info.sumTaxesOverflow = commasUI(info.sumTaxesOverflow);
 
       poolInfos.push(info);
     }
