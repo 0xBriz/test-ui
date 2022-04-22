@@ -7,9 +7,14 @@ export const commasUI = (value) => {
 
 export class InitialTokenOffering {
   public readonly contract: ethers.Contract;
+  public readonly UST: ethers.Contract;
+  public readonly BUSD: ethers.Contract;
 
-  meta: any = {
-    treasury: '',
+  // For test UI shit
+  treasuryInfo: any = {
+    treasuryAddress: '',
+    balanceUST: 0,
+    balanceBUSD: 0,
   };
 
   pools: any[] = [
@@ -44,8 +49,25 @@ export class InitialTokenOffering {
     private provider: ethers.providers.JsonRpcProvider,
     private currentUserAddress: string
   ) {
+    /**
+     *
+     * HARD CODED FOR NOW -> ADD CORRECT ADDRESSES
+     *
+     */
     this.contract = new ethers.Contract(
       '0xAdF1E9cE59304Ec04C048365f1463A7d673a1d79',
+      TOKEN_OFFERING_ABI,
+      signer
+    );
+
+    this.UST = new ethers.Contract(
+      '0xB92ADEAc403CA2252f9a3ED6EB59a7372FBC195e',
+      TOKEN_OFFERING_ABI,
+      signer
+    );
+
+    this.BUSD = new ethers.Contract(
+      '0x3ce45a456B45a301f92dD71B6125095770B8f88E',
       TOKEN_OFFERING_ABI,
       signer
     );
@@ -85,6 +107,25 @@ export class InitialTokenOffering {
     }
   }
 
+  async setTreasuryInfo() {
+    try {
+      const [treasuryAddress] = await Promise.all([
+        this.contract.treasury(),
+        this.UST.balanceOf(),
+      ]);
+      this.treasuryInfo.treasuryAddress = treasuryAddress;
+
+      const [ustBalance, busdBalance] = await Promise.all([
+        this.UST.balanceOf(),
+        this.BUSD.balanceOf(),
+      ]);
+      this.treasuryInfo.balanceUST = commasUI(ustBalance);
+      this.treasuryInfo.balanceBUSD = commasUI(busdBalance);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async depositPool(pool, amount: number) {
     try {
       const amountBN = ethers.utils.parseEther(String(amount));
@@ -114,8 +155,8 @@ export class InitialTokenOffering {
 
         poolInfos.push(info);
       }
-
       this.pools = poolInfos;
+      await this.setTreasuryInfo();
     } catch (error) {
       throw error;
     }
@@ -142,11 +183,7 @@ export class InitialTokenOffering {
 
   async getUserBalanceOf(tokenAddress: string) {
     try {
-      const token = new ethers.Contract(
-        tokenAddress,
-        ['function balanceOf(address) public view returns (uint256)'],
-        this.provider
-      );
+      const token = new ethers.Contract(tokenAddress, ERC20_ABI, this.provider);
       const balance = await token.balanceOf(this.currentUserAddress);
       return {
         walletBalance: {
@@ -167,10 +204,7 @@ export class InitialTokenOffering {
 
       const token = new ethers.Contract(
         poolToken.tokenAddress,
-        [
-          'function approve(address, uint256) public returns (bool)',
-          'function allowance(address, address) public view returns (uint256)',
-        ],
+        ERC20_ABI,
         this.signer
       );
 
@@ -215,8 +249,14 @@ export async function awaitTransactionComplete(
   }
 }
 
+const ERC20_ABI = [
+  'function balanceOf(address) public view returns (uint256)',
+  'function approve(address, uint256) public returns (bool)',
+  'function allowance(address, address) public view returns (uint256)',
+];
+
 // prettier-ignore
-export const TOKEN_OFFERING_ABI = [
+const TOKEN_OFFERING_ABI = [
   {
     inputs: [
       {
