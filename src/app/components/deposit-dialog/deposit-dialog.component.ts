@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PresaleService } from 'src/app/services/presale.service';
 
 @Component({
   selector: 'app-deposit-dialog',
@@ -15,15 +14,14 @@ export class DepositDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data,
-    public dialog: MatDialogRef<DepositDialogComponent>,
-    public readonly presale: PresaleService
+    public dialog: MatDialogRef<DepositDialogComponent>
   ) {}
 
   async ngOnInit() {
     this.formGroup = new FormGroup({
       amount: new FormControl(0, [Validators.required]),
     });
-    this.userBalance = await this.presale.getUserBalanceOf(
+    this.userBalance = await this.data.presale.getUserBalanceOf(
       this.data.pool.tokenAddress
     );
   }
@@ -33,7 +31,7 @@ export class DepositDialogComponent implements OnInit {
     const amount = this.formGroup.value.amount;
     console.log(amount);
     if (amount != 0) {
-      await this.presale.deposit(this.data.pool, amount);
+      await this.data.presale.deposit(this.data.pool, amount);
       this.dialog.close(true);
     }
   }

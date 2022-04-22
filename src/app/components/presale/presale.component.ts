@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PresaleService } from 'src/app/services/presale.service';
+import { InitialTokenOffering } from 'src/app/services/initial-token-offering.class';
+import { Web3Service } from 'src/app/services/web3.service';
 import { DepositDialogComponent } from '../deposit-dialog/deposit-dialog.component';
 
 @Component({
@@ -8,18 +9,28 @@ import { DepositDialogComponent } from '../deposit-dialog/deposit-dialog.compone
   templateUrl: './presale.component.html',
   styleUrls: ['./presale.component.scss'],
 })
-export class PresaleComponent implements OnInit {
-  pools = [];
+export class PresaleComponent {
+  presale: InitialTokenOffering;
 
-  constructor(public presale: PresaleService, public dialog: MatDialog) {}
-
-  async ngOnInit() {}
+  constructor(public dialog: MatDialog, private web3: Web3Service) {
+    this.web3.web3.subscribe((info) => {
+      if (info) {
+        this.presale = new InitialTokenOffering(
+          this.web3.web3Info.signer,
+          this.web3.web3Info.provider,
+          this.web3.web3Info.userAddress
+        );
+        this.presale.getPools();
+      }
+    });
+  }
 
   setDeposit(pool) {
     this.dialog.open(DepositDialogComponent, {
       data: {
         pool,
         label: 'Deposit ' + pool.name,
+        presale: this.presale,
       },
     });
   }
