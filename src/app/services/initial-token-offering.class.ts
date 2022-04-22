@@ -8,6 +8,10 @@ export const commasUI = (value) => {
 export class InitialTokenOffering {
   public readonly contract: ethers.Contract;
 
+  meta: any = {
+    treasury: '',
+  };
+
   pools: any[] = [
     {
       name: 'Moist UST',
@@ -73,7 +77,7 @@ export class InitialTokenOffering {
   async finalWithdraw() {
     try {
       // Will fail if not an admin
-      // Withdraws all LP token deposits to provided address
+      // Withdraws all LP token deposits to the treasury
       const tx = await this.contract.finalWithdraw();
       await awaitTransactionComplete(tx);
     } catch (error) {
@@ -87,38 +91,6 @@ export class InitialTokenOffering {
       await this.approveIfNeeded(pool, amountBN);
       const tx = await this.contract.depositPool(amountBN, pool.poolId);
       await awaitTransactionComplete(tx);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  private async approveIfNeeded(pool, amount) {
-    try {
-      const poolToken = this.pools.find(
-        (p) => p.tokenAddress == pool.tokenAddress
-      );
-
-      const token = new ethers.Contract(
-        poolToken.tokenAddress,
-        [
-          'function approve(address, uint256) public returns (bool)',
-          'function allowance(address, address) public view returns (uint256)',
-        ],
-        this.signer
-      );
-
-      const allowance = await token.allowance(
-        this.currentUserAddress,
-        this.contract.address
-      );
-
-      if (allowance.lt(amount)) {
-        const tx = await token.approve(
-          this.contract.address,
-          ethers.constants.MaxUint256
-        );
-        await awaitTransactionComplete(tx);
-      }
     } catch (error) {
       throw error;
     }
@@ -182,6 +154,38 @@ export class InitialTokenOffering {
           BN: balance,
         },
       };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  private async approveIfNeeded(pool, amount) {
+    try {
+      const poolToken = this.pools.find(
+        (p) => p.tokenAddress == pool.tokenAddress
+      );
+
+      const token = new ethers.Contract(
+        poolToken.tokenAddress,
+        [
+          'function approve(address, uint256) public returns (bool)',
+          'function allowance(address, address) public view returns (uint256)',
+        ],
+        this.signer
+      );
+
+      const allowance = await token.allowance(
+        this.currentUserAddress,
+        this.contract.address
+      );
+
+      if (allowance.lt(amount)) {
+        const tx = await token.approve(
+          this.contract.address,
+          ethers.constants.MaxUint256
+        );
+        await awaitTransactionComplete(tx);
+      }
     } catch (error) {
       throw error;
     }
